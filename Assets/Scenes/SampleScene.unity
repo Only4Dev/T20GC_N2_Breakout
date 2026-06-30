@@ -6150,6 +6150,7 @@ GameObject:
   - component: {fileID: 1064487048}
   - component: {fileID: 1064487047}
   - component: {fileID: 1064487046}
+  - component: {fileID: 1064487049}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -6180,9 +6181,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!61 &1064487047
 BoxCollider2D:
@@ -6246,6 +6247,33 @@ Transform:
   - {fileID: 352657474}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1064487049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064487045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f082dc508b0b7514c85a4af961ce935b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  inputActions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  moveAction:
+    m_Name: Move
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: e17cb7b3-ce3d-4750-b912-93bd02d25851
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  rigidbody2D: {fileID: 0}
+  leftLimit: -9.5
+  rightLimit: 9.5
+  direction: 0
+  playerSpeed: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
