@@ -48,20 +48,7 @@ public class Player : MonoBehaviour
 
         targetPosition.x = Mathf.Clamp(targetPosition.x, leftLimit, rightLimit);
 
-        targetPosition = PixelSnap.Snap(targetPosition, 16);
-
         rigidbody2D.MovePosition(targetPosition);
-
-        if (!PixelSnap.IsSnapped(rigidbody2D.position, 16))
-        {
-            Debug.LogWarning("Player is not pixel snapped.");
-        }
-
-        if (!PixelSnap.IsSnapped(targetPosition, 16))
-        {
-            Debug.LogWarning("Target position is not pixel snapped.");
-        }
-
     }
 
     private void ReadInput()

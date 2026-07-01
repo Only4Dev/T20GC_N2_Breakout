@@ -4,6 +4,6 @@ public class Brick : MonoBehaviour
 {
     public void BrickBreak()
     {
-        Debug.Log("Break!");
+        Destroy(this.gameObject);
     }
 }
