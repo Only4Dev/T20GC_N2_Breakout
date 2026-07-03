@@ -1,144 +1,161 @@
+using System;
 using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float ballSpeed = 10f;
-    [SerializeField] private float bounceFactor = 1.5f;
+    [SerializeField] private Vector2 direction = new Vector2(0.6f, 0.8f);
+    [SerializeField] private float speed = 8f;
+    private float baseSpeed;
 
-    [Header("Direction Clamp")]
-    [SerializeField] private float minHorizontalDirection = 0.20f;
-    [SerializeField] private float minVerticalDirection = 0.20f;
+    [Header("Ball Shape")]
+    [SerializeField] private float radius = 0.5f;
 
-    [Header("Collision")]
-    [SerializeField] private float collisionEpsilon = 0.005f;
-    [SerializeField] private LayerMask collisionMask;
+    [Header("Angle Limits")]
+    [SerializeField, Range(0.05f, 0.5f)] private float minAxisRatio = 0.35f;
+    [SerializeField, Range(0f, 20f)] private float bounceJitterDegrees = 8f;
+    [SerializeField] private float rapidBounceWindow = 0.08f; // seconds
 
-    private Rigidbody2D rb;
-    private CircleCollider2D circleCollider;
-
-    [SerializeField]
-    private Vector2 direction = new Vector2(0.7f, 0.7f);
-
-    private float BallRadius => circleCollider.radius * transform.lossyScale.x;
-
-    private void Awake()
+    private static readonly Vector2[] LaunchDirections =
     {
-        rb = GetComponent<Rigidbody2D>();
-        circleCollider = GetComponent<CircleCollider2D>();
+        new Vector2(-0.5f, 1f),
+        new Vector2(0f, 1f),
+        new Vector2(0.5f, 1f)
+    };
+
+    public static event Action OnBallLost;
+    public static event Action OnPaddleHit;
+    public static event Action OnCeilingHit;
+
+    public void ReportCeilingHit()
+    {
+        OnCeilingHit?.Invoke();
+    }
+
+    private Vector2 position;
+    private float lastBounceTime = -999f;
+
+    public Vector2 Position => position;
+    public Vector2 PreviousPosition { get; private set; }
+    public Vector2 Direction => direction;
+    public float Radius => radius;
+    public bool IsLaunched { get; private set; }
+
+    private void Start()
+    {
+        position = transform.position;
+        baseSpeed = speed;
+    }
+
+    private void Update()
+    {
+        Move();
+    }
+
+    private void LateUpdate()
+    {
+        Render();
+    }
+
+    private void Move()
+    {
+        if (!IsLaunched)
+            return;
+
+        PreviousPosition = position;
+        position += direction * speed * Time.deltaTime;
+    }
+
+    private void Render()
+    {
+        transform.position = position;
+    }
+
+    public void Launch(int directionIndex)
+    {
+        int index = Mathf.Clamp(directionIndex, 0, LaunchDirections.Length - 1);
+        direction = LaunchDirections[index].normalized;
+        IsLaunched = true;
+    }
+
+    public void ResetSpeed()
+    {
+        speed = baseSpeed;
+    }
+
+    public void Stop()
+    {
+        IsLaunched = false;
+    }
+
+    // --- Public API used by BallCollisionSystem ---
+
+    public void SetPosition(Vector2 newPosition)
+    {
+        position = newPosition;
+    }
+
+    public void ReflectX()
+    {
+        direction.x *= -1;
+        ApplyJitter();
+        ClampAngle();
+    }
+
+    public void ReflectY()
+    {
+        direction.y *= -1;
+        ApplyJitter();
+        ClampAngle();
+    }
+
+    public void BounceAngled(float sideways, float minUpward)
+    {
+        direction = new Vector2(sideways, 1f).normalized;
+
+        if (direction.y < minUpward)
+            direction.y = minUpward;
+
+        ClampAngle();
+    }
+
+    public void IncreaseSpeed(float amount)
+    {
+        speed += amount;
+    }
+
+    public void ReportLost()
+    {
+        OnBallLost?.Invoke();
+    }
+
+    public void ReportPaddleHit()
+    {
+        OnPaddleHit?.Invoke();
+    }
+
+    private void ClampAngle()
+    {
+        direction.Normalize();
+
+        if (Mathf.Abs(direction.y) < minAxisRatio)
+            direction.y = direction.y >= 0f ? minAxisRatio : -minAxisRatio;
+
+        if (Mathf.Abs(direction.x) < minAxisRatio)
+            direction.x = direction.x >= 0f ? minAxisRatio : -minAxisRatio;
 
         direction.Normalize();
     }
 
-    private void FixedUpdate()
+    private void ApplyJitter()
     {
-        BallMove();
-    }
+        float timeSinceLastBounce = Time.time - lastBounceTime;
+        lastBounceTime = Time.time;
 
-    private void BallMove()
-    {
-        float moveDistance = ballSpeed * Time.fixedDeltaTime;
+        float rapidFactor = Mathf.Clamp01(timeSinceLastBounce / rapidBounceWindow);
+        float effectiveJitter = bounceJitterDegrees * rapidFactor;
 
-        Vector2 currentPosition = rb.position;
-
-        RaycastHit2D hit = Physics2D.CircleCast(
-            currentPosition,
-            BallRadius,
-            direction,
-            moveDistance,
-            collisionMask);
-
-        if (hit.collider == null)
-        {
-            currentPosition += direction * moveDistance;
-        }
-        else
-        {
-            float travelDistance = Mathf.Max(hit.distance - collisionEpsilon, 0f);
-
-            currentPosition += direction * travelDistance;
-
-            currentPosition = HandleHit(hit, currentPosition);
-        }
-
-        rb.MovePosition(currentPosition);
-    }
-
-    private Vector2 HandleHit(RaycastHit2D hit, Vector2 currentPosition)
-    {
-        GameObject hitObject = hit.collider.gameObject;
-
-        if (hitObject.CompareTag("Player"))
-            return HandlePlayerHit(hitObject, hit, currentPosition);
-
-        if (hitObject.CompareTag("Brick"))
-            return HandleBrickHit(hitObject, hit, currentPosition);
-
-        if (hitObject.CompareTag("Wall"))
-            return HandleWallHit(hit, currentPosition);
-
-        return currentPosition;
-    }
-
-    private Vector2 HandleWallHit(RaycastHit2D hit, Vector2 currentPosition)
-    {
-        direction = Vector2.Reflect(direction, hit.normal).normalized;
-
-        ClampDirection();
-
-        return currentPosition + (Vector2)hit.normal * collisionEpsilon;
-    }
-
-    private Vector2 HandleBrickHit(GameObject brick, RaycastHit2D hit, Vector2 currentPosition)
-    {
-        direction = Vector2.Reflect(direction, hit.normal).normalized;
-
-        ClampDirection();
-
-        brick.GetComponent<Brick>().BrickBreak();
-
-        return currentPosition + (Vector2)hit.normal * collisionEpsilon;
-    }
-
-    private Vector2 HandlePlayerHit(GameObject player, RaycastHit2D hit, Vector2 currentPosition)
-    {
-        BoxCollider2D paddleCollider = player.GetComponent<BoxCollider2D>();
-
-        float paddleWidth = paddleCollider.bounds.size.x;
-
-        // -1 = extremo izquierdo, +1 = extremo derecho
-        float impact =
-            (currentPosition.x - player.transform.position.x) /
-            (paddleWidth * 0.5f);
-
-        impact *= bounceFactor;
-        impact = Mathf.Clamp(impact, -1f, 1f);
-
-        // Partimos de la normal real de la cápsula.
-        Vector2 bounce = hit.normal;
-
-        // El impacto del jugador modifica únicamente la componente X.
-        bounce.x += impact;
-
-        direction = bounce.normalized;
-
-        ClampDirection();
-
-        // Separar la pelota fuera del paddle usando la normal.
-        return currentPosition + hit.normal * collisionEpsilon;
-    }
-    private void ClampDirection()
-    {
-        if (Mathf.Abs(direction.x) < minHorizontalDirection)
-        {
-            direction.x = Mathf.Sign(direction.x) * minHorizontalDirection;
-        }
-
-        if (Mathf.Abs(direction.y) < minVerticalDirection)
-        {
-            direction.y = Mathf.Sign(direction.y) * minVerticalDirection;
-        }
-
-        direction.Normalize();
+        float jitter = UnityEngine.Random.Range(-effectiveJitter, effectiveJitter);
+        direction = Quaternion.Euler(0f, 0f, jitter) * direction;
     }
 }

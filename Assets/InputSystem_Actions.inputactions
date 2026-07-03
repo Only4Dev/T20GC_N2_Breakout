@@ -148,6 +148,39 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "Screen Half",
+                    "id": "8b1f39a3-3728-43d2-ac1e-276e4386457e",
+                    "path": "ScreenHalf",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "press",
+                    "id": "d5afdcb5-b2fb-4836-ae94-a09b99270175",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positionX",
+                    "id": "691d3b4b-7af2-4d30-89db-6b4bab620545",
+                    "path": "<Touchscreen>/primaryTouch/position/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         },

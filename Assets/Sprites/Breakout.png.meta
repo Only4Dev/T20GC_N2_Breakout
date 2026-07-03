@@ -176,9 +176,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 16
+        y: 19
         width: 48
-        height: 16
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 8, y: 0, z: 8, w: 0}
@@ -242,9 +242,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 96
-        y: 16
+        y: 19
         width: 16
-        height: 16
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -263,11 +263,11 @@ TextureImporter:
       name: Breakout_6
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
+        x: 5
+        y: 4
+        width: 7
+        height: 7
+      alignment: 9
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
@@ -307,10 +307,10 @@ TextureImporter:
       name: Breakout_8
       rect:
         serializedVersion: 2
-        x: 32
+        x: 48
         y: 0
         width: 16
-        height: 16
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -330,9 +330,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 48
-        y: 0
+        y: 8
         width: 16
-        height: 16
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

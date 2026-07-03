@@ -14,8 +14,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Ball
+  - Gameplay
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 2987418081
+    locked: 0
+  - name: UI
+    uniqueID: 1832189005
     locked: 0
   m_RenderingLayers:
   - Default

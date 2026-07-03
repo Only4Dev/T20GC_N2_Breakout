@@ -13,34 +13,22 @@ public class SubPixelRenderer : MonoBehaviour
     {
         previousTargetPosition = target.position;
 
-        transform.position = target.position;
+        transform.position = PixelSnap.Snap(target.position, pixelsPerUnit);
     }
 
     private void LateUpdate()
     {
         Vector3 deltaMovement = target.position - previousTargetPosition;
-
         accumulatedMovement += (Vector2)deltaMovement;
 
         float pixelSize = 1f / pixelsPerUnit;
 
-        while (Mathf.Abs(accumulatedMovement.x) >= pixelSize)
-        {
-            float step = Mathf.Sign(accumulatedMovement.x) * pixelSize;
+        Vector2 snappedOffset = new Vector2(
+            Mathf.Floor(Mathf.Abs(accumulatedMovement.x) / pixelSize) * pixelSize * Mathf.Sign(accumulatedMovement.x),
+            Mathf.Floor(Mathf.Abs(accumulatedMovement.y) / pixelSize) * pixelSize * Mathf.Sign(accumulatedMovement.y));
 
-            transform.position += new Vector3(step, 0f, 0f);
-
-            accumulatedMovement.x -= step;
-        }
-
-        while (Mathf.Abs(accumulatedMovement.y) >= pixelSize)
-        {
-            float step = Mathf.Sign(accumulatedMovement.y) * pixelSize;
-
-            transform.position += new Vector3(0f, step, 0f);
-
-            accumulatedMovement.y -= step;
-        }
+        transform.position += (Vector3)snappedOffset;
+        accumulatedMovement -= snappedOffset;
 
         previousTargetPosition = target.position;
     }
