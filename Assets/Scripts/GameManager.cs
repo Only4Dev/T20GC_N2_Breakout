@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float comboBonusStep = 0.2f;
 
     [Header("Levels")]
-    [SerializeField] private GameObject[] levels; // level GameObjects, each containing its own bricks
+    [SerializeField] private LevelGenerator levelGenerator;
     [SerializeField] private float levelTransitionDelay = 2f;
 
     private int currentLevelIndex;
@@ -111,10 +111,8 @@ public class GameManager : MonoBehaviour
 
     private void SetupLevels()
     {
-        for (int i = 0; i < levels.Length; i++)
-            levels[i].SetActive(i == 0);
-
         currentLevelIndex = 0;
+        levelGenerator.Generate(currentLevelIndex);
     }
 
     private void Update()
@@ -249,10 +247,8 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(levelTransitionDelay);
 
-        levels[currentLevelIndex].SetActive(false);
-
-        currentLevelIndex = (currentLevelIndex + 1) % levels.Length; // wrap back to level 0 after the last level
-        levels[currentLevelIndex].SetActive(true);
+        currentLevelIndex++; // no wrapping needed - levelNumber just keeps climbing, feeding difficulty forever
+        levelGenerator.Generate(currentLevelIndex);
 
         paddle.ResetWidth(); // completing a level restores normal paddle size
         hasShrunkPaddle = false;
