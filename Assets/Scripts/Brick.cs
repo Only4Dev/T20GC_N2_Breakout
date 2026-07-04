@@ -72,6 +72,7 @@ public class Brick : MonoBehaviour
 
     private void BrickBreak()
     {
+        Active.Remove(this);
         OnBrickBroken?.Invoke(scoreValue);
         SpawnDebris();
         audioManager.PlayBrickBreak();

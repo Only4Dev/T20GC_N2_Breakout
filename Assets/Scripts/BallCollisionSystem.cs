@@ -5,6 +5,7 @@ public class BallCollisionSystem : MonoBehaviour
     [Header("References")]
     [SerializeField] private Ball ball;
     [SerializeField] private Player paddle;
+    [SerializeField] AudioManager audioManager;
 
     [Header("Stage Bounds")]
     [SerializeField] private float leftLimit;
@@ -16,7 +17,6 @@ public class BallCollisionSystem : MonoBehaviour
     [SerializeField, Range(0.05f, 0.5f)] private float minUpwardRatio = 0.2f;
     [SerializeField] private float paddleVelocityInfluence = 0.1f;
 
-    [SerializeField] AudioManager audioManager;
 
     private void Awake()
     {
