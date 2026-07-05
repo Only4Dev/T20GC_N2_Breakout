@@ -8752,7 +8752,6 @@ GameObject:
   - component: {fileID: 1521076575}
   - component: {fileID: 1521076574}
   - component: {fileID: 1521076573}
-  - component: {fileID: 1521076577}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -8821,7 +8820,7 @@ Camera:
   m_GameObject: {fileID: 1521076572}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 4
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -8878,18 +8877,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1521076577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521076572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7108929fc3ad79e4d81984e9bab43099, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FPSLimit
 --- !u!1 &1542459275
 GameObject:
   m_ObjectHideFlags: 0
@@ -9803,7 +9790,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -9900,15 +9887,15 @@ MonoBehaviour:
   musicSource: {fileID: 2043862855}
   sfxSource: {fileID: 2043862854}
   ballHitSource: {fileID: 2043862857}
-  backgroundMusic: {fileID: 8300000, guid: a998f78c39bce0742a87cef9d77257ed, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: 73588e7fe13afd145973d121006040d5, type: 3}
   pauseClip: {fileID: 8300000, guid: 386e960d0df28404899e78e06009b4ce, type: 3}
   ballHitClip: {fileID: 8300000, guid: bdfadd3c635a4d84ab26089391860425, type: 3}
-  metalBrickHitClip: {fileID: 8300000, guid: 386e960d0df28404899e78e06009b4ce, type: 3}
+  metalBrickHitClip: {fileID: 8300000, guid: 674acb1f817e06747b967181d6aabde9, type: 3}
   brickBreakClip: {fileID: 8300000, guid: be05b933176e9614aa306abd8f81e658, type: 3}
-  musicVolume: 0.5
+  musicVolume: 0.8
   sfxVolume: 1
-  minPitch: 0.8
-  maxPitch: 1.2
+  minPitch: 0.9
+  maxPitch: 0.9
 --- !u!82 &2043862857
 AudioSource:
   m_ObjectHideFlags: 0
