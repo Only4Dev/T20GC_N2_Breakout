@@ -8,9 +8,10 @@ This project was developed in **Unity 6** using **C#**, featuring a custom colli
 
 ### Gameplay
 
-![Level 1](Screenshots/gameplay.png)
-
-![Level 3](Screenshots/gameplay2.png)
+<p align="center">
+  <img src="Screenshots/gameplay.png" alt="Level 1" width="300">
+  <img src="Screenshots/gameplay2.png" alt="Level 3" width="300">
+</p>
 
 ---
 
