@@ -9,8 +9,7 @@ This project was developed in **Unity 6** using **C#**, featuring a custom colli
 ### Gameplay
 
 ![Level 1](Screenshots/gameplay.png)
-
-![Level 3](Screenshots/gameplay2.png)
+![Level 3](Screenshots/gameplay2.png) 
 
 ---
 
