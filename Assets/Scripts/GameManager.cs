@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Aiming")]
     [SerializeField] private float aimInputThreshold = 0.1f;
-    [SerializeField] private float autoLaunchTime = 3f;
+    [SerializeField] private float autoLaunchTime = 4f;
 
     private float waitingTimer;
 
@@ -40,8 +40,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float comboBonusStep = 0.2f;
 
     [Header("Levels")]
-    [SerializeField] private LevelGenerator levelGenerator;
+    [SerializeField] private GameObject[] levelPrefabs; // drag prefab assets here, not scene objects
+    [SerializeField] private Transform levelParent; // empty GameObject in the scene to hold the current level
     [SerializeField] private float levelTransitionDelay = 2f;
+
+    private GameObject currentLevelInstance;
 
     private int currentLevelIndex;
     private bool isTransitioning;
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
     private void SetupLevels()
     {
         currentLevelIndex = 0;
-        levelGenerator.Generate(currentLevelIndex);
+        currentLevelInstance = Instantiate(levelPrefabs[currentLevelIndex], levelParent);
     }
 
     private void Update()
@@ -122,6 +125,7 @@ public class GameManager : MonoBehaviour
 
         ParkBallOnPaddle();
 
+        if(!isTransitioning)
         waitingTimer += Time.deltaTime;
 
         if (ActionPressed() || waitingTimer >= autoLaunchTime)
@@ -240,15 +244,14 @@ public class GameManager : MonoBehaviour
     private System.Collections.IEnumerator AdvanceLevelRoutine()
     {
         isTransitioning = true;
-        currentState = GameState.Waiting;
-        ball.Stop();
-        paddle.SetMovementEnabled(false);
-        ParkBallOnPaddle();
+        EnterWaitingState();
 
         yield return new WaitForSeconds(levelTransitionDelay);
 
-        currentLevelIndex++; // no wrapping needed - levelNumber just keeps climbing, feeding difficulty forever
-        levelGenerator.Generate(currentLevelIndex);
+        Destroy(currentLevelInstance);
+
+        currentLevelIndex = (currentLevelIndex + 1) % levelPrefabs.Length; // wrap back to level 0 after the last level
+        currentLevelInstance = Instantiate(levelPrefabs[currentLevelIndex], levelParent);
 
         paddle.ResetWidth(); // completing a level restores normal paddle size
         hasShrunkPaddle = false;
